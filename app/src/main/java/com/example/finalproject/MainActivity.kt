@@ -14,22 +14,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference("message")
+//        val database = FirebaseDatabase.getInstance()
+//        val myRef = database.getReference("message")
+//Adds value to database
+//        myRef.setValue("Hello, World!")
 
-        val postListener = object:ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                val post = dataSnapshot.getValue()
-                Log.d(post.toString(),"test")
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        myRef.addValueEventListener(postListener)
+//        val postListener = object:ValueEventListener{
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                val post = dataSnapshot.getValue()
+//                Log.d(post.toString(),"test")
+//            }
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+//            }
+//        }
+//        myRef.addValueEventListener(postListener)
 
     }
 }
