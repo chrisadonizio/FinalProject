@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentMainBinding
 
@@ -19,11 +20,18 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
         val rootView = binding.root
 
-        val tasks = listOf(Task("Task 1", arrayOf("Do step","Do another step"), completed = false),Task("Task 2",
+        val tasks = mutableListOf<Task>(Task("Task 1", arrayOf("Do step","Do another step"), completed = false),Task("Task 2",
             arrayOf(""),false),Task("Task 3", arrayOf("Do step"),true))
 
         val adapter = TaskAdapter(tasks)
         binding.recyclerView.adapter =adapter
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            val name = bundle.getString("bundleKey")
+            val list = bundle.getStringArray("bundleKey2")
+            tasks.add(Task(name.toString(),list,false))
+            val adapter = TaskAdapter(tasks)
+            binding.recyclerView.adapter =adapter
+        }
         binding.button.setOnClickListener{
             val action = MainFragmentDirections.actionMainFragmentToAddTaskFragment()
             rootView.findNavController().navigate(action)
