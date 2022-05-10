@@ -17,10 +17,8 @@ class AddTaskFragment : Fragment() {
     private var _binding: FragmentAddTaskBinding? = null
     private val binding get() = _binding!!
     private var listOfSteps = mutableListOf<String>()
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
         _binding = FragmentAddTaskBinding.inflate(inflater,container,false)
         val rootView = binding.root
 
@@ -34,6 +32,7 @@ class AddTaskFragment : Fragment() {
         }
         binding.submit.setOnClickListener{
           setFragmentResult("requestKey",bundleOf("bundleKey" to binding.nameEnter.text.toString(),"bundleKey2" to listOfSteps.toTypedArray()))
+            rootView.findNavController().navigateUp()
         }
         return rootView
     }
