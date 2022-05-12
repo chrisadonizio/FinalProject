@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentMainBinding
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import android.content.ContentValues.TAG
+import android.widget.Toast
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -28,20 +27,39 @@ class MainFragment : Fragment() {
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
         val rootView = binding.root
-        val postListener = object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var post = dataSnapshot.getValue()
-                if(post!= null){
+        val childEventListener = object : ChildEventListener{
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
+                val task: Task? = dataSnapshot.getValue<Task>()
+                Log.d(task.toString(),"original value")
+                if (task != null) {
+                    tasks.add(task)
+                    Log.d(task.toString(),"Step 1")
+                    val adapter = TaskAdapter(tasks)
+                    binding.recyclerView.adapter =adapter
+                }
+            }
 
-                    }
+            override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
 
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+                Log.w(TAG, "postComments:onCancelled", databaseError.toException())
+                Toast.makeText(context, "Failed to load comments.",
+                    Toast.LENGTH_SHORT).show()
             }
+
         }
-        myRef.addValueEventListener(postListener)
+        myRef.addChildEventListener(childEventListener)
         val adapter = TaskAdapter(tasks)
         binding.recyclerView.adapter =adapter
         setFragmentResultListener("requestKey") { requestKey, bundle ->
