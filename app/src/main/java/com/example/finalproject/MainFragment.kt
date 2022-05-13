@@ -33,7 +33,8 @@ class MainFragment : Fragment() {
                 val task: Task? = dataSnapshot.getValue<Task>()
                 Log.d(task.toString(),"original value")
                 if (task != null) {
-                    tasks.add(task)
+                    if(!(task in tasks))
+                        tasks.add(task)
                     Log.d(task.toString(),"Step 1")
                     val adapter = TaskAdapter(tasks)
                     binding.recyclerView.adapter =adapter
@@ -60,14 +61,11 @@ class MainFragment : Fragment() {
 
         }
         myRef.addChildEventListener(childEventListener)
-        val adapter = TaskAdapter(tasks)
-        binding.recyclerView.adapter =adapter
         setFragmentResultListener("requestKey") { requestKey, bundle ->
             val name = bundle.getString("bundleKey")
             val list = bundle.getStringArray("bundleKey2")
             if (list != null) {
                 val currentTask = Task(name.toString(),list.asList(),false)
-                tasks.add(currentTask)
                 val newData = myRef.push()
                 newData.setValue(currentTask)
 
