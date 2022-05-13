@@ -26,6 +26,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
+
         val rootView = binding.root
         val childEventListener = object : ChildEventListener{
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -33,11 +34,13 @@ class MainFragment : Fragment() {
                 val task: Task? = dataSnapshot.getValue<Task>()
                 Log.d(task.toString(),"original value")
                 if (task != null) {
-                    if(!(task in tasks))
+                    if (!(task in tasks)) {
                         tasks.add(task)
-                    Log.d(task.toString(),"Step 1")
+                        Log.d(task.toString(), "Step 1")
+
+                    }
                     val adapter = TaskAdapter(tasks)
-                    binding.recyclerView.adapter =adapter
+                    binding.recyclerView.adapter = adapter
                 }
             }
 
@@ -65,7 +68,7 @@ class MainFragment : Fragment() {
             val name = bundle.getString("bundleKey")
             val list = bundle.getStringArray("bundleKey2")
             if (list != null) {
-                val currentTask = Task(name.toString(),list.asList(),false)
+                val currentTask = Task(name.toString(),list.asList(),false,)
                 val newData = myRef.push()
                 newData.setValue(currentTask)
 
@@ -75,7 +78,6 @@ class MainFragment : Fragment() {
             val action = MainFragmentDirections.actionMainFragmentToAddTaskFragment()
             rootView.findNavController().navigate(action)
         }
-
         return rootView
     }
 
