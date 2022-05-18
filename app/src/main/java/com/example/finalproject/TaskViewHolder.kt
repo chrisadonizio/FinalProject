@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.finalproject.databinding.ListItemLayoutBinding
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class TaskViewHolder(val binding:ListItemLayoutBinding):
         RecyclerView.ViewHolder(binding.root){
@@ -18,17 +18,13 @@ class TaskViewHolder(val binding:ListItemLayoutBinding):
                     val action = MainFragmentDirections.actionMainFragmentToEditTaskFragment()
                     binding.root.findNavController().navigate(action)
                 }
-//                binding.checkBox.setOnClickListener{
-//                    val database = FirebaseDatabase.getInstance()
-//                    val myRef = database.getReference()
-//                    myRef.child("").orderByKey()
-//
-//                }
+
             }
 
             fun bindTask(task: Task) {
                 currentTask = task
                 binding.checkBox.text = task.taskName
+                binding.checkBox.isChecked = currentTask.completed
                 var message = ""
                 if (task.listOfSteps != null) {
                     for ((index, step) in task.listOfSteps.withIndex()) {
@@ -37,5 +33,11 @@ class TaskViewHolder(val binding:ListItemLayoutBinding):
                     binding.steps.text = message
 
                 }
+                binding.checkBox.setOnClickListener{
+                    val myRef = FirebaseDatabase.getInstance().getReference("message").child(currentTask.key).child("completed").setValue(!currentTask.completed)
+                    currentTask.completed = !currentTask.completed
+
+                }
             }
         }
+

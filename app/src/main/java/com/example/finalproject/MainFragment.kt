@@ -45,7 +45,6 @@ class MainFragment : Fragment() {
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
-
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
@@ -68,8 +67,9 @@ class MainFragment : Fragment() {
             val name = bundle.getString("bundleKey")
             val list = bundle.getStringArray("bundleKey2")
             if (list != null) {
-                val currentTask = Task(name.toString(),list.asList(),false,)
+                val currentTask = Task(name.toString(),list.asList(),false)
                 val newData = myRef.push()
+                currentTask.key = newData.key.toString()
                 newData.setValue(currentTask)
 
             }
