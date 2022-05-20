@@ -10,6 +10,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentMainBinding
 import android.content.ContentValues.TAG
+import android.view.WindowManager
 import android.widget.Toast
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
@@ -26,7 +27,6 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
-
         val rootView = binding.root
         val childEventListener = object : ChildEventListener{
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -45,6 +45,18 @@ class MainFragment : Fragment() {
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                val newTask = dataSnapshot.getValue<Task>()
+                val taskKey = dataSnapshot.key
+                for ((index, task) in tasks.withIndex()) {
+                    if (task.key == taskKey) {
+                        if (newTask != null) {
+                            tasks[index].completed = newTask.completed
+                        }
+                    }
+                }
+                val adapter = TaskAdapter(tasks)
+                binding.recyclerView.adapter = adapter
+
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {

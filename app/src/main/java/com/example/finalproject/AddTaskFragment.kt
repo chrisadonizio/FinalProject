@@ -1,24 +1,32 @@
 package com.example.finalproject
 
+import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.DatePicker
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentAddTaskBinding
 import com.example.finalproject.databinding.FragmentMainBinding
+import java.util.*
 
 
 class AddTaskFragment : Fragment() {
     private var _binding: FragmentAddTaskBinding? = null
     private val binding get() = _binding!!
     private var listOfSteps = mutableListOf<String>()
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View? {
         _binding = FragmentAddTaskBinding.inflate(inflater,container,false)
         val rootView = binding.root
 
@@ -34,6 +42,7 @@ class AddTaskFragment : Fragment() {
           setFragmentResult("requestKey",bundleOf("bundleKey" to binding.nameEnter.text.toString(),"bundleKey2" to listOfSteps.toTypedArray()))
             rootView.findNavController().navigateUp()
         }
+
         return rootView
     }
 }
