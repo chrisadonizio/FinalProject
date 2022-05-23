@@ -1,5 +1,6 @@
 package com.example.finalproject
-
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,10 +11,17 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentMainBinding
 import android.content.ContentValues.TAG
-import android.view.WindowManager
+import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.os.Build
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import androidx.core.content.ContextCompat;
+import androidx.core.content.ContextCompat.getSystemServiceName
+import java.util.*
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -21,7 +29,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val database = FirebaseDatabase.getInstance()
     private val myRef = database.getReference("message")
-
+    private val channelName: String = "To-Do List"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,8 +86,10 @@ class MainFragment : Fragment() {
         setFragmentResultListener("requestKey") { requestKey, bundle ->
             val name = bundle.getString("bundleKey")
             val list = bundle.getStringArray("bundleKey2")
+            val date: Date = bundle.getSerializable("date") as Date
+            Log.d("YEs",date.toString())
             if (list != null) {
-                val currentTask = Task(name.toString(),list.asList(),false)
+                val currentTask = Task(name.toString(),list.asList(),false,date=date)
                 val newData = myRef.push()
                 currentTask.key = newData.key.toString()
                 newData.setValue(currentTask)
@@ -90,7 +100,30 @@ class MainFragment : Fragment() {
             val action = MainFragmentDirections.actionMainFragmentToAddTaskFragment()
             rootView.findNavController().navigate(action)
         }
+
+        var builder = NotificationCompat.Builder(binding.root.context,channelName)
+            .setSmallIcon(R.drawable.ic_baseline_message_24)
+            .setContentTitle("Title")
+            .setContentText("This is a message")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
         return rootView
+    }
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = channelName
+            val descriptionText = "This is a channel for the to do list"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelName, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
 }
