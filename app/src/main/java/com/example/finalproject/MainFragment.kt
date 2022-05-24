@@ -1,7 +1,5 @@
 package com.example.finalproject
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,8 +11,10 @@ import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentMainBinding
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.icu.text.CaseMap
 import android.os.Build
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -98,23 +98,15 @@ class MainFragment : Fragment() {
                 val newData = myRef.push()
                 currentTask.key = newData.key.toString()
                 newData.setValue(currentTask)
-
+                scheduleNotification(date)
             }
         }
         binding.button.setOnClickListener{
             val action = MainFragmentDirections.actionMainFragmentToAddTaskFragment()
             rootView.findNavController().navigate(action)
         }
-        var builder = NotificationCompat.Builder(binding.root.context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_baseline_message_24)
-            .setContentTitle("Look Here")
-            .setContentText("Test")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-        with(NotificationManagerCompat.from(binding.root.context)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(notificationID, builder.build())
-        }
+
         return rootView
     }
     private fun createNotificationChannel() {
@@ -123,13 +115,29 @@ class MainFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "To-Do List"
             val descriptionText = "Description"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("todo", name, importance).apply {
-                description = descriptionText
-            }
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("todo", name, importance)
+            channel.description = descriptionText
             // Register the channel with the system
             val notificationManager: NotificationManager =binding.root.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
+    private fun scheduleNotification(time){
+        val intent = Intent(binding.root.context,Notification::class.java )
+        intent.putExtra(title,"To Do")
+        intent.putExtra(message,"Message")
+        val pendingIntent = PendingIntent.getBroadcast(binding.root.context,notificationID,intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager:AlarmManager = getActivity()?.getSystemService(ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,time,pendingIntent)
+        }
+        showAlert(time,title,message)
+    }
+    private fun showAlert(time:Date,title:String,message:String){
+        AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("Title $title\nMessage$message)
+    }
+
 }
