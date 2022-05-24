@@ -24,6 +24,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import androidx.core.content.ContextCompat;
 import androidx.core.content.ContextCompat.getSystemServiceName
+import java.sql.Time
 import java.util.*
 
 class MainFragment : Fragment() {
@@ -41,6 +42,7 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
         val rootView = binding.root
         createNotificationChannel()
+        scheduleNotification(Date(2022,4,24,15,19))
         val childEventListener = object : ChildEventListener{
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
@@ -98,7 +100,6 @@ class MainFragment : Fragment() {
                 val newData = myRef.push()
                 currentTask.key = newData.key.toString()
                 newData.setValue(currentTask)
-                scheduleNotification(date)
             }
         }
         binding.button.setOnClickListener{
@@ -123,21 +124,22 @@ class MainFragment : Fragment() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-    private fun scheduleNotification(time){
+    private fun scheduleNotification(time:Date){
         val intent = Intent(binding.root.context,Notification::class.java )
         intent.putExtra(title,"To Do")
         intent.putExtra(message,"Message")
         val pendingIntent = PendingIntent.getBroadcast(binding.root.context,notificationID,intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-
         val alarmManager:AlarmManager = getActivity()?.getSystemService(ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,time,pendingIntent)
+            val cal = Calendar.getInstance()
+            cal.setTime(time)
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent)
         }
         showAlert(time,title,message)
     }
     private fun showAlert(time:Date,title:String,message:String){
-        AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("Title $title\nMessage$message)
+        AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("Title $title\nMessage$message\nAt: $time").setPositiveButton("Okay"){_,_->}.show()
     }
 
 }
