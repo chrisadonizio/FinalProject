@@ -1,9 +1,14 @@
 package com.example.finalproject
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -32,4 +37,5 @@ class MainActivity : AppCompatActivity() {
 //        myRef.addValueEventListener(postListener)
 
     }
+
 }

@@ -1,6 +1,7 @@
 package com.example.finalproject
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,9 +14,11 @@ import com.example.finalproject.databinding.FragmentMainBinding
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
@@ -29,13 +32,15 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val database = FirebaseDatabase.getInstance()
     private val myRef = database.getReference("message")
-    private val channelName: String = "To-Do List"
+    private val CHANNEL_ID: String = "todo"
+    private val notificationID = 101
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
         val rootView = binding.root
+        createNotificationChannel()
         val childEventListener = object : ChildEventListener{
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
@@ -100,30 +105,31 @@ class MainFragment : Fragment() {
             val action = MainFragmentDirections.actionMainFragmentToAddTaskFragment()
             rootView.findNavController().navigate(action)
         }
-
-        var builder = NotificationCompat.Builder(binding.root.context,channelName)
+        var builder = NotificationCompat.Builder(binding.root.context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_baseline_message_24)
-            .setContentTitle("Title")
-            .setContentText("This is a message")
+            .setContentTitle("Look Here")
+            .setContentText("Test")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
+        with(NotificationManagerCompat.from(binding.root.context)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(notificationID, builder.build())
+        }
         return rootView
     }
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = channelName
-            val descriptionText = "This is a channel for the to do list"
+            val name = "To-Do List"
+            val descriptionText = "Description"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(channelName, name, importance).apply {
+            val channel = NotificationChannel("todo", name, importance).apply {
                 description = descriptionText
             }
             // Register the channel with the system
-            val notificationManager: NotificationManager =
-                applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager =binding.root.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
-
 }
