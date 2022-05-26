@@ -10,8 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalProject"
         >
-        <receiver android:name=".Notification"
-            android:enabled = "true"/>
+        <receiver android:name=".Notification" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
