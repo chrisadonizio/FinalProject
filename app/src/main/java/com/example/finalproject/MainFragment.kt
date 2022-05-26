@@ -34,15 +34,13 @@ class MainFragment : Fragment() {
     private val database = FirebaseDatabase.getInstance()
     private val myRef = database.getReference("message")
     private val CHANNEL_ID: String = "todo"
-    private val notificationID = 101
+    private val notificationID = 1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
         val rootView = binding.root
-        createNotificationChannel()
-        scheduleNotification(Date(2022,4,24,15,19))
         val childEventListener = object : ChildEventListener{
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
@@ -110,36 +108,6 @@ class MainFragment : Fragment() {
 
         return rootView
     }
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "To-Do List"
-            val descriptionText = "Description"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("todo", name, importance)
-            channel.description = descriptionText
-            // Register the channel with the system
-            val notificationManager: NotificationManager =binding.root.context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-    private fun scheduleNotification(time:Date){
-        val intent = Intent(binding.root.context,Notification::class.java )
-        intent.putExtra(title,"To Do")
-        intent.putExtra(message,"Message")
-        val pendingIntent = PendingIntent.getBroadcast(binding.root.context,notificationID,intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val alarmManager:AlarmManager = getActivity()?.getSystemService(ALARM_SERVICE) as AlarmManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val cal = Calendar.getInstance()
-            cal.setTime(time)
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent)
-        }
-        showAlert(time,title,message)
-    }
-    private fun showAlert(time:Date,title:String,message:String){
-        AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("Title $title\nMessage$message\nAt: $time").setPositiveButton("Okay"){_,_->}.show()
-    }
+
 
 }
