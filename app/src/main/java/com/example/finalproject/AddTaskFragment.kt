@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils.isEmpty
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
@@ -70,16 +72,21 @@ class AddTaskFragment : Fragment() {
 
         })
         binding.submit.setOnClickListener {
-            var bundle = bundleOf(
-                "bundleKey" to binding.nameEnter.text.toString(),
-                "bundleKey2" to listOfSteps.toTypedArray()
-            )
-            bundle.putSerializable("date", cal.getTime())
-            setFragmentResult(
-                "requestKey", bundle
-            )
+            if(isEmpty(binding.nameEnter.text)){
+                Toast.makeText(this.context,"Fill out Name!",Toast.LENGTH_SHORT).show()
+            }
+            else {
+                var bundle = bundleOf(
+                    "bundleKey" to binding.nameEnter.text.toString(),
+                    "bundleKey2" to listOfSteps.toTypedArray()
+                )
+                bundle.putSerializable("date", cal.getTime())
+                setFragmentResult(
+                    "requestKey", bundle
+                )
 
-            rootView.findNavController().navigateUp()
+                rootView.findNavController().navigateUp()
+            }
         }
         return rootView
     }

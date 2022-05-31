@@ -28,14 +28,14 @@ class TaskViewHolder(val binding:ListItemLayoutBinding):
                 currentTask = task
                 binding.checkBox.text = task.taskName
                 binding.checkBox.isChecked = currentTask.completed
-                var message = ""
-                if (task.listOfSteps != null) {
-                    for ((index, step) in task.listOfSteps.withIndex()) {
-                        message += "${index+1}. $step\n"
-                    }
-                    binding.steps.text = message
-
-                }
+//                var message = ""
+//                if (task.listOfSteps != null) {
+//                    for ((index, step) in task.listOfSteps.withIndex()) {
+//                        message += "${index+1}. $step\n"
+//                    }
+//                    binding.steps.text = message
+//
+//                }
                 binding.checkBox.setOnClickListener{
                     val myRef = FirebaseDatabase.getInstance().getReference("message").child(currentTask.key).child("completed").setValue(!currentTask.completed)
                     currentTask.completed = !currentTask.completed
