@@ -22,10 +22,9 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
-import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat;
 import androidx.core.content.ContextCompat.getSystemServiceName
 import java.sql.Time
-import java.time.LocalDate
 import java.util.*
 
 class MainFragment : Fragment() {
@@ -42,15 +41,16 @@ class MainFragment : Fragment() {
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater,container,false)
         val rootView = binding.root
-        createNotificationChannel()
-        scheduleNotification(Date(2022-1900,4,25,20,59))
         val childEventListener = object : ChildEventListener{
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
                 val task: Task? = dataSnapshot.getValue<Task>()
                 Log.d(task.toString(),"original value")
                 if (task != null) {
                     if (!(task in tasks)) {
                         tasks.add(task)
+                        Log.d(task.toString(), "Step 1")
+
                     }
                     val adapter = TaskAdapter(tasks)
                     binding.recyclerView.adapter = adapter
@@ -108,38 +108,6 @@ class MainFragment : Fragment() {
 
         return rootView
     }
-    private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "To-Do List"
-            val descriptionText = "Description"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("todo", name, importance)
-            channel.description = descriptionText
-            // Register the channel with the system
-            val notificationManager: NotificationManager = this.requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-    private fun scheduleNotification(time:Date){
-        val intent = Intent(binding.root.context,Notification::class.java )
-        intent.putExtra(title,"To Do")
-        intent.putExtra(message,"Message")
-        val pendingIntent = PendingIntent.getBroadcast(binding.root.context,notificationID,intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val alarmManager:AlarmManager = activity?.getSystemService(ALARM_SERVICE) as AlarmManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val cal = Calendar.getInstance()
-            Log.d(cal.timeInMillis.toString(),"Expected")
-            cal.time = time
-            Log.d(cal.timeInMillis.toString(),"Given")
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent)
-        }
-        showAlert(time,title,message)
-    }
-    private fun showAlert(time:Date,title:String,message:String){
-        AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("Title $title\nMessage$message\nAt: $time").setPositiveButton("Okay"){_,_->}.show()
-    }
+
 
 }
