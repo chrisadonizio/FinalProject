@@ -14,8 +14,8 @@
             android:id="@+id/action_mainFragment_to_addTaskFragment"
             app:destination="@id/addTaskFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_editTaskFragment"
-            app:destination="@id/editTaskFragment" />
+            android:id="@+id/action_mainFragment_to_viewTaskFragment2"
+            app:destination="@id/viewTaskFragment2" />
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -27,8 +27,20 @@
             app:destination="@id/mainFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editTaskFragment"
-        android:name="com.example.finalproject.EditTaskFragment"
-        android:label="fragment_edit_task"
-        tools:layout="@layout/fragment_edit_task" />
+        android:id="@+id/viewTaskFragment2"
+        android:name="com.example.finalproject.ViewTaskFragment"
+        android:label="fragment_view_task"
+        tools:layout="@layout/fragment_view_task" >
+        <argument
+            android:name="date"
+            app:argType="java.util.Date"
+            app:nullable="true" />
+        <argument
+            android:name="steps"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

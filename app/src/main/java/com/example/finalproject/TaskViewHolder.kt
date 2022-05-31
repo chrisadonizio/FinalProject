@@ -15,11 +15,14 @@ class TaskViewHolder(val binding:ListItemLayoutBinding):
             private lateinit var currentTask:Task
             init {
                 binding.root.setOnClickListener { view ->
-                    val action = MainFragmentDirections.actionMainFragmentToEditTaskFragment()
+                    val action =
+                        MainFragmentDirections.actionMainFragmentToViewTaskFragment2(if(currentTask.date!=null){currentTask.date}else{null}, currentTask.listOfSteps?.toTypedArray(),currentTask.taskName)
                     binding.root.findNavController().navigate(action)
+
+                }
                 }
 
-            }
+
 
             fun bindTask(task: Task) {
                 currentTask = task
