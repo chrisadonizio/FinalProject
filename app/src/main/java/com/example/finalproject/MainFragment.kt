@@ -73,7 +73,17 @@ class MainFragment : Fragment() {
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-
+                val newTask = dataSnapshot.getValue<Task>()
+                val taskKey = dataSnapshot.key
+                val iterator = tasks.iterator()
+                while(iterator.hasNext()){
+                    val task = iterator.next()
+                    if (task.key == taskKey) {
+                            tasks.remove(newTask)
+                    }
+                }
+                val adapter = TaskAdapter(tasks)
+                binding.recyclerView.adapter = adapter
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {

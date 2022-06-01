@@ -41,6 +41,10 @@ class TaskViewHolder(val binding:ListItemLayoutBinding):
                     currentTask.completed = !currentTask.completed
 
                 }
+                binding.imageButton2.setOnClickListener{
+                    FirebaseDatabase.getInstance().getReference("message").child(currentTask.key).removeValue()
+
+                }
             }
         }
 

@@ -127,7 +127,9 @@ class AddTaskFragment : Fragment() {
             showAlert(time,title,message)
         }
         private fun showAlert(time:Date,title:String,message:String){
-            AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("A reminder for ${binding.nameEnter.text} is now set\nAt: $time").setPositiveButton("Okay"){ _, _->}.show()
+            val format = "MM/dd/yyyy"
+            val sdf = java.text.SimpleDateFormat(format, java.util.Locale.US)
+            AlertDialog.Builder(binding.root.context).setTitle("Notification Scheduled").setMessage("A reminder for ${binding.nameEnter.text} is now set\nAt: ${sdf.format(time)}").setPositiveButton("Okay"){ _, _->}.show()
         }
 
 
