@@ -2,25 +2,25 @@ package com.example.finalproject
 
 import android.app.*
 import android.content.Context
+import android.content.DialogInterface.BUTTON_NEGATIVE
+import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils.isEmpty
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import com.example.finalproject.databinding.FragmentAddTaskBinding
-import com.example.finalproject.databinding.FragmentMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -61,13 +61,18 @@ class AddTaskFragment : Fragment() {
         }
         binding.calender!!.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
-                DatePickerDialog(
-                    binding.root.context,
+                val picker: DatePickerDialog = DatePickerDialog(
+                    binding.root.context, R.style.DialogTheme,
                     dateSetListener,
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
+                )
+                picker.show()
+                val buttonColor = ContextCompat.getColor(binding.root.context, R.color.dark_blue)
+                picker.getButton(BUTTON_NEGATIVE).setTextColor(buttonColor)
+                picker.getButton(BUTTON_POSITIVE).setTextColor(buttonColor)
+
             }
 
         })
