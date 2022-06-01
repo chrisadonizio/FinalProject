@@ -100,7 +100,7 @@ class MainFragment : Fragment() {
                 newData.setValue(currentTask)
             }
         }
-        binding.button.setOnClickListener{
+        binding.floatingActionButton3.setOnClickListener{
             val action = MainFragmentDirections.actionMainFragmentToAddTaskFragment()
             rootView.findNavController().navigate(action)
         }

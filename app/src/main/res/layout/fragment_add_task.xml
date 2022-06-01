@@ -5,8 +5,9 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTaskFragment"
-    >
+    android:background="#FFFFFF"
+    android:padding="10dp"
+    tools:context=".AddTaskFragment">
 
     <EditText
         android:id="@+id/stepAddButton"
@@ -31,7 +32,9 @@
         android:id="@+id/addSteps"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FCA311"
         android:text="Add"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -40,6 +43,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Steps"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameEnter" />
@@ -50,7 +55,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="#FCA311"
         android:text="Finish"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -59,7 +66,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:backgroundTint="#FCA311"
         android:text="Set Date"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -70,6 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Choose a Date"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
